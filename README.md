@@ -24,7 +24,7 @@
 Install dependencies:
 
 ```bash
-pip install pygame
+pip install -r requirements.txt
 ````
 
 ---
