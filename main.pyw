@@ -9,11 +9,13 @@ import os
 import sys
 import struct
 import random
+import tkinter.messagebox
+import tkinter.filedialog as fd
 
 def resource_path(relative_path: str) -> str:
     """Return the proper path to bundled data (for onefile .exe or dev mode)."""
     try:
-        base_path = sys._MEIPASS  # PyInstaller sets this at runtime
+        base_path = sys._MEIPASS  # type: ignore | PyInstaller sets this at runtime
     except AttributeError:
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
@@ -121,7 +123,7 @@ def character_selection_screen() -> str:
     return choices[selected][0]
 
 def credits_screen() -> None:
-    """Display scrolling credits with centered lines."""
+    """Display scrolling credits with centered lines and gradient background."""
     lines: list[tuple[str, bool, bool, str | None]] = [
         ("Credits", True, True, None),  # (text, is_title, is_centered)
         ('-'.center(WIDTH, "-"), False, False, None),
@@ -189,9 +191,19 @@ def credits_screen() -> None:
     scroll_speed = 1.5
     y_offset = start_y
 
+    def draw_gradient_background(surface, top_color, bottom_color):
+        """Draw a vertical gradient from top_color to bottom_color."""
+        for y in range(surface.get_height()):
+            ratio = y / surface.get_height()
+            r = int(top_color[0] * (1 - ratio) + bottom_color[0] * ratio)
+            g = int(top_color[1] * (1 - ratio) + bottom_color[1] * ratio)
+            b = int(top_color[2] * (1 - ratio) + bottom_color[2] * ratio)
+            pygame.draw.line(surface, (r, g, b), (0, y), (surface.get_width(), y))
+
     running = True
     while running:
-        win.fill((20, 20, 20))
+        # Gradient from black to dark grey
+        draw_gradient_background(win, (0, 0, 0), (40, 40, 40))
         y = y_offset
         for surf, is_title in rendered:
             new_spacing = 200 if is_title else spacing
@@ -264,13 +276,17 @@ if joysticks:
 # --- World data ---
 WORLD_FILE = "world.wlco"
 WORLD_SIZE = 30  # -10..19
-def save_world(blocks):
+def save_world(blocks, WORLD_FILE):
+    """Save the world blocks to a binary file."""
+    if not blocks:
+        print("No blocks to save, skipping world save.")
+        return
     with open(WORLD_FILE, "wb") as f:
         f.write(struct.pack("<I", len(blocks)))
         for x, z in blocks:
             f.write(struct.pack("<ii", x, z))
 
-def load_world():
+def load_world(WORLD_FILE):
     if not os.path.exists(WORLD_FILE):
         # Generate flat world
         return set((x, z) for x in range(-10, 20) for z in range(-10, 20))
@@ -282,7 +298,7 @@ def load_world():
             blocks.add((x, z))
         return blocks
 
-blocks = load_world()
+blocks = load_world(WORLD_FILE)
 
 def get_camera():
     global camera_yaw, camera_pitch, third_person
@@ -366,7 +382,7 @@ def draw_cube(center, size, cam_pos, cam_look, color=(255,0,0), width=2):
     ]
     for a,b in edges:
         if proj[a] is not None and proj[b] is not None:
-            pygame.draw.line(win, color, proj[a][0], proj[b][0], width)
+            pygame.draw.line(win, color, proj[a][0], proj[b][0], width) # type: ignore
 
 def raycast_block(cam_pos, cam_dir, blocks, max_dist=8):
     """Returns (x, z) of first block hit, or None."""
@@ -425,9 +441,27 @@ while run:
             camera_pitch -= my * 0.005
             camera_pitch = max(-math.pi/2 + 0.01, min(math.pi/2 - 0.01, camera_pitch))
         if event.type == pygame.KEYDOWN and event.key == pygame.K_l:
-            run = False
+            pygame.event.set_grab(False)
+            pygame.mouse.set_visible(True)
+            if tkinter.messagebox.askyesno("Leave World", "Are you sure you want to leave?"):
+                run = False
+            else:
+                pygame.event.set_grab(True)
+                pygame.mouse.set_visible(False)
         if event.type == pygame.KEYDOWN and event.key == pygame.K_v:
             third_person = not third_person
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
+            pygame.event.set_grab(False)
+            pygame.mouse.set_visible(True)
+            WORLD_FILE = fd.askopenfilename(
+                title="Open World File",
+                filetypes=[("Wilco World Files", "*.wlco"), ("All Files", "*.*")],
+                initialdir=os.getcwd()
+            )
+            pygame.event.set_grab(True)
+            pygame.mouse.set_visible(False)
+            if WORLD_FILE:
+                blocks = load_world(WORLD_FILE)
         if event.type == pygame.KEYDOWN and event.key == pygame.K_o:
             credits_screen()
         if event.type == pygame.KEYDOWN and event.key == pygame.K_g:
@@ -451,7 +485,7 @@ while run:
             hit = raycast_block(cam_pos, dir_vec, blocks)
             if hit:
                 blocks.remove(hit)
-                save_world(blocks)
+                save_world(blocks, WORLD_FILE)
 
     keys = pygame.key.get_pressed()
     move_dx, move_dz = 0, 0
