@@ -1,6 +1,7 @@
-[![WILCO Banner](assets/images/front-dog.png)](https://github.com/Natuworkguy/Wilco/)
+[![`WILCO Banner`](assets/images/front-dog.png)](https://github.com/Natuworkguy/Wilco/)
 
-# **WILCO**
+# [![**WILCO**](http://img.shields.io/badge/Wilco-blue)](https://github.com/Natuworkguy/Wilco/)
+
 
 **WILCO** is a pixel-perfect Pygame adventure featuring animated animals, retro-inspired visuals, and a fully custom world system. Whether you're a dev or a player, WILCO invites you into a world of charm, action, and creativity. Built with ❤️ in Python.
 
@@ -17,7 +18,7 @@
 
 ## 🧠 Requirements
 
-- Python 3.9+ recommended
+- [![`Python 3.9+`](http://img.shields.io/badge/Python%203.9+-blue)](https://www.python.org/)
 - [`pygame`](https://www.pygame.org/)
 
 Install dependencies:
@@ -54,16 +55,16 @@ Wilco/
 ---
 
 ## ❤️ Credits
-Code by [**Natuworkguy**](https://github.com/Natuworkguy),
+Code by [**`Natuworkguy`**](https://github.com/Natuworkguy),
 
 Idea by **Kath Hill**,
 
-Music by **Gloomy_Background755** - [MakoVII](https://github.com/OnionUI/Themes/tree/main/themes/MakoVII%20by%20Gloomy_Background755)
+Music by **Gloomy_Background755** - [`MakoVII`](https://github.com/OnionUI/Themes/tree/main/themes/MakoVII%20by%20Gloomy_Background755)
 
 ## 🪪 License
 ---
 
 
 Licensed under the **GNU Affero General Public License v3.0**.
-See the [LICENSE](./LICENSE) file for full details.
+See the [`LICENSE`](./LICENSE) file for full details.
 
