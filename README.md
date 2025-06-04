@@ -55,11 +55,14 @@ Wilco/
 
 ## ❤️ Credits
 Code by [**Natuworkguy**](https://github.com/Natuworkguy),
-Idea by Kath Hill
-Music by Gloomy_Background755 - [MakoVII](https://github.com/OnionUI/Themes/tree/main/themes/MakoVII%20by%20Gloomy_Background755)
----
+
+Idea by **Kath Hill**,
+
+Music by **Gloomy_Background755** - [MakoVII](https://github.com/OnionUI/Themes/tree/main/themes/MakoVII%20by%20Gloomy_Background755)
 
 ## 🪪 License
+---
+
 
 Licensed under the **GNU Affero General Public License v3.0**.
 See the [LICENSE](./LICENSE) file for full details.
