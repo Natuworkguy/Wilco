@@ -11,8 +11,6 @@
 - 🐶 Dynamic sprites for dogs & cats (idle, walk, jump, and more!)
 - 🌍 Custom `.wlco` world file format
 - 🖋️ Retro UI using hand-picked fonts like **Orbitron**, **ComicNeue**, and more
-- 📦 Easy packaging with `main.spec` + `compile.sh`
-- 🔁 Includes a `backup_main.py` just in case the main ever breaks
 - 🔤 Built-in asset system with organized folders for fonts and images
 
 ---
