@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+"""
+Copyright (C) 2025 The Nathan Network, Inc.
+This free software is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE Version 3, see LICENSE.md.
+"""
 import pygame
 import math
 import os
