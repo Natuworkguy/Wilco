@@ -66,7 +66,7 @@ def splash_screen() -> None:
                 sys.exit()
         clock.tick(60)
 
-def character_selection_screen() -> str:
+def character_selection_screen() -> str | None:
     """Interactive character selection screen. Returns chosen image filename."""
     win.fill((30, 30, 40))
     pygame.display.set_caption("Select Character | Wilco")
@@ -111,6 +111,8 @@ def character_selection_screen() -> str:
                     selected = (selected + 1) % len(choices)
                 if event.key in (pygame.K_LEFT, pygame.K_a):
                     selected = (selected - 1) % len(choices)
+                if event.key == pygame.K_ESCAPE:
+                    return None
                 if event.key in (pygame.K_RETURN, pygame.K_SPACE):
                     running = False
             if event.type == pygame.JOYBUTTONDOWN:
@@ -458,12 +460,14 @@ while run:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_o:
             credits_screen()
         if event.type == pygame.KEYDOWN and event.key == pygame.K_g:
-            try:
-                player_img = pygame.image.load(os.path.join(assetsdir, 'images', character_selection_screen())).convert_alpha()
-            except (pygame.error, FileNotFoundError) as e:
-                print(f"Error loading texture: {e}")
-                pygame.quit()
-                sys.exit()
+            selectedchar = character_selection_screen()
+            if selectedchar is not None:
+                try:
+                    player_img = pygame.image.load(os.path.join(assetsdir, 'images', selectedchar)).convert_alpha()
+                except (pygame.error, FileNotFoundError) as e:
+                    print(f"Error loading texture: {e}")
+                    pygame.quit()
+                    sys.exit()
         # Controller: toggle view on X button press
         if event.type == pygame.JOYBUTTONDOWN and event.button == 3:
             third_person = not third_person
