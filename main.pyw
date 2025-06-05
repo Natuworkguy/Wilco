@@ -460,7 +460,7 @@ while run:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_o:
             credits_screen()
         if event.type == pygame.KEYDOWN and event.key == pygame.K_g:
-            selectedchar = character_selection_screen()
+            selectedchar: str | None = character_selection_screen()
             if selectedchar is not None:
                 try:
                     player_img = pygame.image.load(os.path.join(assetsdir, 'images', selectedchar)).convert_alpha()
