@@ -66,7 +66,7 @@ def splash_screen() -> None:
                 sys.exit()
         clock.tick(60)
 
-def character_selection_screen() -> str | None:
+def character_selection_screen() -> str:
     """Interactive character selection screen. Returns chosen image filename."""
     win.fill((30, 30, 40))
     pygame.display.set_caption("Select Character | Wilco")
@@ -127,7 +127,7 @@ def character_selection_screen() -> str | None:
 
 def credits_screen() -> None:
     """Display scrolling credits with centered lines and gradient background."""
-    lines: list[tuple[str, bool, bool, str | None]] = [
+    lines: list[tuple[str, bool, bool, str]] = [
         ("Credits", True, True, None),  # (text, is_title, is_centered)
         ('-'.center(win.get_width(), "-"), False, False, None),
         ("", False, False, None),
@@ -335,7 +335,7 @@ def project_point(
     px: float, py: float, pz: float,
     cam_pos: tuple[float, float, float],
     cam_look: tuple[float, float, float]
-) -> tuple[tuple[int, int], float] | None:
+) -> tuple[tuple[int, int], float]:
     cx, cy, cz = cam_pos
     lx, ly, lz = cam_look
     fx, fy, fz = lx - cx, ly - cy, lz - cz
@@ -460,7 +460,7 @@ while run:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_o:
             credits_screen()
         if event.type == pygame.KEYDOWN and event.key == pygame.K_g:
-            selectedchar: str | None = character_selection_screen()
+            selectedchar: str = character_selection_screen()
             if selectedchar is not None:
                 try:
                     player_img = pygame.image.load(os.path.join(assetsdir, 'images', selectedchar)).convert_alpha()
