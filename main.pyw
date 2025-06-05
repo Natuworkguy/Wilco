@@ -75,7 +75,8 @@ def character_selection_screen() -> str:
         ('dog.png', "Dog"),
     ]
     selected = 0
-    font = pygame.font.Font(None, 48)
+    bytesized_path: str = os.path.join(assetsdir, 'fonts', "Bytesized-Regular.ttf")
+    font = pygame.font.Font(bytesized_path, 48)
     running = True
     while running:
         win.fill((30, 30, 40))
@@ -110,7 +111,7 @@ def character_selection_screen() -> str:
                     selected = (selected + 1) % len(choices)
                 if event.key in (pygame.K_LEFT, pygame.K_a):
                     selected = (selected - 1) % len(choices)
-                if event.key in (pygame.K_RETURN, pygame.K_SPACE, pygame.K_ESCAPE):
+                if event.key in (pygame.K_RETURN, pygame.K_SPACE):
                     running = False
             if event.type == pygame.JOYBUTTONDOWN:
                 if event.button == 0:  # A button
@@ -126,29 +127,30 @@ def credits_screen() -> None:
     """Display scrolling credits with centered lines and gradient background."""
     lines: list[tuple[str, bool, bool, str | None]] = [
         ("Credits", True, True, None),  # (text, is_title, is_centered)
-        ('-'.center(WIDTH, "-"), False, False, None),
+        ('-'.center(win.get_width(), "-"), False, False, None),
         ("", False, False, None),
         ("Programming by:    Nathan Chonot", False, True, "programmer"),
         ("Game engine by:    Nathan Chonot", False, True, "programmer"),
         ("Idea by:           Kath Hill", False, True, 'idea'),
         ("Music by:   Gloomy_Background755", False, True, "programmer"),
         ("", False, False, None),
-        ('-'.center(WIDTH, "-"), False, False, None),
+        ('-'.center(win.get_width(), "-"), False, False, None),
         ("", False, False, None),
         ("Early testers:", False, True, 'subtitle'),
         ("    - Kath Hill", False, True, "tester"),
         ("    - Ahshanti Poulard", False, True, "tester"),
         ("    - Karla Zavala", False, True, "tester"),
         ("", False, False, None),
-        ('-'.center(WIDTH, "-"), False, False, None),
+        ('-'.center(win.get_width(), "-"), False, False, None),
         ("", False, False, None),
         ("Fonts by:", False, True, 'subtitle'),
         ("    - Matt McInerney - Orbitron", False, True, "Orbitron"),
         ("    - Peter Hull - VT323", False, True, "VT323"),
         ("    - Craig Rozynski - Comic Neue", False, True, "ComicNeue"),
+        ("    - Baltdev - Bytesized", False, True, "Bytesized"),
         ("    - WDXLLubrifontTC - NightFurySL2001", False, True, "WDXLLubrifontTC"),
         ("", False, False, None),
-        ('-'.center(WIDTH, "-"), False, False, None),
+        ('-'.center(win.get_width(), "-"), False, False, None),
         ("", False, False, None),
         ("Special thanks to:", False, True, 'subtitle'),
         ("    - The pygame community", False, True, "programmer"),
@@ -159,6 +161,7 @@ def credits_screen() -> None:
     title_font: pygame.font.Font = pygame.font.Font(orbitron_path, 64)
     VT323_fontpath: str = os.path.join(assetsdir, 'fonts', "VT323-Regular.ttf")
     ComicNeue_fontpath: str = os.path.join(assetsdir, 'fonts', "ComicNeue-Regular.ttf")
+    bytesized_path: str = os.path.join(assetsdir, 'fonts', "Bytesized-Regular.ttf")
     WDXLLubrifontTC_path: str = os.path.join(assetsdir, 'fonts', "WDXLLubrifontTC-Regular.ttf")
     spacing: int = 60
     # Pre-render surfaces and calculate heights
@@ -181,6 +184,8 @@ def credits_screen() -> None:
             font = pygame.font.Font(VT323_fontpath, 40)
         elif tag == 'WDXLLubrifontTC':
             font = pygame.font.Font(WDXLLubrifontTC_path, 40)
+        elif tag == 'Bytesized':
+            font = pygame.font.Font(bytesized_path, 40)
         surf = font.render(text, True, (200, 220, 255) if is_title else (220, 220, 220))
         rendered.append((surf, is_title))
     # Calculate total height for scrolling
@@ -450,18 +455,6 @@ while run:
                 pygame.mouse.set_visible(False)
         if event.type == pygame.KEYDOWN and event.key == pygame.K_v:
             third_person = not third_person
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
-            pygame.event.set_grab(False)
-            pygame.mouse.set_visible(True)
-            WORLD_FILE = fd.askopenfilename(
-                title="Open World File",
-                filetypes=[("Wilco World Files", "*.wlco"), ("All Files", "*.*")],
-                initialdir=os.getcwd()
-            )
-            pygame.event.set_grab(True)
-            pygame.mouse.set_visible(False)
-            if WORLD_FILE:
-                blocks = load_world(WORLD_FILE)
         if event.type == pygame.KEYDOWN and event.key == pygame.K_o:
             credits_screen()
         if event.type == pygame.KEYDOWN and event.key == pygame.K_g:
