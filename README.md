@@ -1,7 +1,6 @@
 [![`WILCO Banner`](assets/images/front-dog.png)](https://github.com/Natuworkguy/Wilco/)
 
-# [![**WILCO**](http://img.shields.io/badge/Wilco-blue)](https://github.com/Natuworkguy/Wilco/)
-
+# **WILCO**
 
 **WILCO** is a pixel-perfect Pygame adventure featuring animated animals, retro-inspired visuals, and a fully custom world system. Whether you're a dev or a player, WILCO invites you into a world of charm, action, and creativity. Built with ❤️ in Python.
 
