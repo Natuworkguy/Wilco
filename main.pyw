@@ -66,13 +66,13 @@ def splash_screen() -> None:
                 sys.exit()
         clock.tick(60)
 
-def character_selection_screen() -> str:
+def character_selection_screen() -> str | None:
     """Interactive character selection screen. Returns chosen image filename."""
     win.fill((30, 30, 40))
     pygame.display.set_caption("Select Character | Wilco")
-    choices = [
+    choices: list[tuple[str, str]] = [
         ('cat.png', "Cat"),
-        ('dog.png', "Dog"),
+        ('dog.png', "Dog")
     ]
     selected = 0
     bytesized_path: str = os.path.join(assetsdir, 'fonts', "Bytesized-Regular.ttf")
@@ -127,7 +127,7 @@ def character_selection_screen() -> str:
 
 def credits_screen() -> None:
     """Display scrolling credits with centered lines and gradient background."""
-    lines: list[tuple[str, bool, bool, str]] = [
+    lines: list[tuple[str, bool, bool, str | None]] = [
         ("Credits", True, True, None),  # (text, is_title, is_centered)
         ('-'.center(win.get_width(), "-"), False, False, None),
         ("", False, False, None),
@@ -260,6 +260,7 @@ player_img = pygame.transform.scale(player_img, (width * 3, height * 3))
 player_pos = [0.0, 0.0, 0.0]
 player_size = 5.0
 vel_y = 0
+is_cat = True  # Default character
 jumping = False
 gravity = 0.5
 move_speed = 0.2
@@ -335,7 +336,7 @@ def project_point(
     px: float, py: float, pz: float,
     cam_pos: tuple[float, float, float],
     cam_look: tuple[float, float, float]
-) -> tuple[tuple[int, int], float]:
+) -> tuple[tuple[int, int], float] | None:
     cx, cy, cz = cam_pos
     lx, ly, lz = cam_look
     fx, fy, fz = lx - cx, ly - cy, lz - cz
@@ -460,8 +461,9 @@ while run:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_o:
             credits_screen()
         if event.type == pygame.KEYDOWN and event.key == pygame.K_g:
-            selectedchar: str = character_selection_screen()
+            selectedchar: str | None = character_selection_screen()
             if selectedchar is not None:
+                is_cat = selectedchar.startswith('cat')
                 try:
                     player_img = pygame.image.load(os.path.join(assetsdir, 'images', selectedchar)).convert_alpha()
                 except (pygame.error, FileNotFoundError) as e:
@@ -563,7 +565,7 @@ while run:
     win.fill((135, 206, 235))
     # Draw blocks
     for (gx, gz) in blocks:
-        draw_cube((gx, 0.5, gz), 1, cam_pos, cam_look, color=(0,128,0))
+        draw_cube((gx, 0.5, gz), 1, cam_pos, cam_look, color=((0,128,0)))
     # Draw highlighted block
     if highlighted_block:
         draw_cube((highlighted_block[0], 0.5, highlighted_block[1]), 1, cam_pos, cam_look, color=(255,255,0), width=4)
@@ -571,6 +573,11 @@ while run:
         draw_player(player_pos, player_size, cam_pos, cam_look)
     # Draw crosshair
     draw_crosshair()
+    if is_cat:
+        gravity = 0.5
+        move_speed = 0.5
+    else:
+        gravity = 0.3
+        move_speed = 0.2
     pygame.display.update()
-
 pygame.quit()
