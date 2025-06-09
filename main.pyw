@@ -10,7 +10,6 @@ import sys
 import struct
 import random
 import tkinter.messagebox
-import tkinter.filedialog as fd
 
 def resource_path(relative_path: str) -> str:
     """Return the proper path to bundled data (for onefile .exe or dev mode)."""
