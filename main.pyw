@@ -171,23 +171,27 @@ def credits_screen() -> None:
         if is_centered:
             text = text.center(WIDTH, " ")
         font = title_font if is_title else regular_font
-        if tag == 'programmer':
-            font = pygame.font.Font(VT323_fontpath, 40)
-        elif tag == 'idea' or tag == 'tester':
-            font = pygame.font.Font(ComicNeue_fontpath, 40)
-        elif tag == 'subtitle':
-            font = pygame.font.Font(WDXLLubrifontTC_path, 40)
-        elif tag == 'Orbitron':
-            font = pygame.font.Font(orbitron_path, 40)
-        elif tag == 'ComicNeue':
-            font = pygame.font.Font(ComicNeue_fontpath, 40)
-        elif tag == 'VT323':
-            font = pygame.font.Font(VT323_fontpath, 40)
-        elif tag == 'WDXLLubrifontTC':
-            font = pygame.font.Font(WDXLLubrifontTC_path, 40)
-        elif tag == 'Bytesized':
-            font = pygame.font.Font(bytesized_path, 40)
-        surf = font.render(text, True, (200, 220, 255) if is_title else (220, 220, 220))
+        try:
+            if tag == 'programmer':
+                font = pygame.font.Font(VT323_fontpath, 40) if os.path.exists(VT323_fontpath) else pygame.font.Font(None, 40)
+            elif tag == 'idea' or tag == 'tester':
+                font = pygame.font.Font(ComicNeue_fontpath, 40) if os.path.exists(ComicNeue_fontpath) else pygame.font.Font(None, 40)
+            elif tag == 'subtitle':
+                font = pygame.font.Font(WDXLLubrifontTC_path, 40) if os.path.exists(WDXLLubrifontTC_path) else pygame.font.Font(None, 40)
+            elif tag == 'Orbitron':
+                font = pygame.font.Font(orbitron_path, 40) if os.path.exists(orbitron_path) else pygame.font.Font(None, 40)
+            elif tag == 'ComicNeue':
+                font = pygame.font.Font(ComicNeue_fontpath, 40) if os.path.exists(ComicNeue_fontpath) else pygame.font.Font(None, 40)
+            elif tag == 'VT323':
+                font = pygame.font.Font(VT323_fontpath, 40) if os.path.exists(VT323_fontpath) else pygame.font.Font(None, 40)
+            elif tag == 'WDXLLubrifontTC':
+                font = pygame.font.Font(WDXLLubrifontTC_path, 40) if os.path.exists(WDXLLubrifontTC_path) else pygame.font.Font(None, 40)
+            elif tag == 'Bytesized':
+                font = pygame.font.Font(bytesized_path, 40) if os.path.exists(bytesized_path) else pygame.font.Font(None, 40)
+            surf = font.render(text, True, (200, 220, 255) if is_title else (220, 220, 220))
+        except Exception as e:
+            font = pygame.font.Font(None, 40)
+            surf = font.render(text, True, (200, 220, 255) if is_title else (220, 220, 220))
         rendered.append((surf, is_title))
     # Calculate total height for scrolling
     total_height = 0
@@ -269,8 +273,12 @@ camera_yaw = 0.0
 camera_pitch = 0.0
 third_person = False
 
-pygame.event.set_grab(True)
-pygame.mouse.set_visible(False)
+def setmouse(visible: bool) -> None:
+    """Set mouse visibility and grab state."""
+    pygame.mouse.set_visible(visible)
+    pygame.event.set_grab(not visible)
+
+setmouse(False)  # Hide mouse cursor initially
 
 # --- Joystick support ---
 pygame.joystick.init()
@@ -448,13 +456,11 @@ while run:
             camera_pitch -= my * 0.005
             camera_pitch = max(-math.pi/2 + 0.01, min(math.pi/2 - 0.01, camera_pitch))
         if event.type == pygame.KEYDOWN and event.key == pygame.K_l:
-            pygame.event.set_grab(False)
-            pygame.mouse.set_visible(True)
+            setmouse(True)
             if tkinter.messagebox.askyesno("Leave World", "Are you sure you want to leave?"):
                 run = False
             else:
-                pygame.event.set_grab(True)
-                pygame.mouse.set_visible(False)
+                setmouse(False)
         if event.type == pygame.KEYDOWN and event.key == pygame.K_v:
             third_person = not third_person
         if event.type == pygame.KEYDOWN and event.key == pygame.K_o:
