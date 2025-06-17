@@ -133,7 +133,9 @@ def credits_screen() -> None:
         ("Programming by:    Nathan Chonot", False, True, "programmer"),
         ("Game engine by:    Nathan Chonot", False, True, "programmer"),
         ("Idea by:           Kath Hill", False, True, 'idea'),
-        ("Music by:   Gloomy_Background755", False, True, "programmer"),
+        ("Music by: ", False, True, "subtitle"),
+        ("    - BGM - Gloomy_Background755", False, True, "programmer"),
+        ("    - Credits BGM - JXM & Polaris", False, True, "programmer"),
         ("", False, False, None),
         ('-'.center(win.get_width(), "-"), False, False, ""),
         ("", False, False, None),
@@ -166,6 +168,14 @@ def credits_screen() -> None:
     WDXLLubrifontTC_path: str = os.path.join(assetsdir, 'fonts', "WDXLLubrifontTC-Regular.ttf")
     spacing: int = 60
     # Pre-render surfaces and calculate heights
+    pygame.mixer.music.stop()
+    try:
+        pygame.mixer.music.load(os.path.join(assetsdir, 'sounds', 'bgm-credits.mp3'))
+    except pygame.error as e:
+        print(f"Error loading music ({os.path.join(assetsdir, 'bgm-credits.mp3')}): {e}")
+        pygame.quit()
+        sys.exit()
+    pygame.mixer.music.play(-1)
     rendered = []
     for text, is_title, is_centered, tag in lines:
         if is_centered:
@@ -198,7 +208,7 @@ def credits_screen() -> None:
     for surf, is_title in rendered:
         total_height += 200 if is_title else spacing
     start_y = win.get_height() + total_height // 2
-    scroll_speed = 1.5
+    scroll_speed = 2.5
     y_offset = start_y
 
     def draw_gradient_background(surface, top_color, bottom_color):
@@ -232,6 +242,15 @@ def credits_screen() -> None:
             pygame.time.wait(1000)
             break
         clock.tick(60)
+    pygame.mixer.music.stop()
+    try:
+        pygame.mixer.music.load(os.path.join(assetsdir, 'sounds', 'bgm.mp3'))
+    except pygame.error as e:
+        print(f"Error loading music ({os.path.join(assetsdir, 'bgm.mp3')}): {e}")
+        pygame.quit()
+        sys.exit()
+    pygame.mixer.music.play(-1)
+
 pygame.init()
 WIDTH, HEIGHT = 640, 480
 assetsdir = resource_path('assets')
