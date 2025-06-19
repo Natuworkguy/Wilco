@@ -58,8 +58,9 @@ Code by [**`Natuworkguy`**](https://github.com/Natuworkguy),
 
 Idea by **Kath Hill**,
 
-Music by **Gloomy_Background755** - [`MakoVII`](https://github.com/OnionUI/Themes/tree/main/themes/MakoVII%20by%20Gloomy_Background755)
-
+Music:
+    - Background music by **Gloomy_Background755** - [`MakoVII`](https://github.com/OnionUI/Themes/tree/main/themes/MakoVII%20by%20Gloomy_Background755)
+    - Credits music by **JXM** and **Polaris**
 ## 🪪 License
 ---
 
