@@ -123,6 +123,62 @@ def character_selection_screen() -> str:
                     selected = (selected + 1) % len(choices)
         clock.tick(30)
     return choices[selected][0]
+def game_menu() -> str:
+    win.fill((30, 30, 40))
+    pygame.display.set_caption("Menu | Wilco")
+    choices: list[tuple[str, str]] = [
+        (None, "Play", "controller.png"),
+        (sys.exit, "Quit", "quit.png"),
+    ]
+    selected = 0
+    bytesized_path: str = os.path.join(assetsdir, 'fonts', "Bytesized-Regular.ttf")
+    font = pygame.font.Font(bytesized_path, 48)
+    running = True
+    while running:
+        win.fill((30, 30, 40))
+        # Draw title
+        title = pygame.font.Font(os.path.join(assetsdir, 'fonts', 'Lobster-Regular.ttf'), 55).render("Wilco", True, (200, 220, 255))
+        win.blit(title, (win.get_width() // 2 - title.get_width() // 2, 40))
+        # Draw character images and names
+        for i, (_, label, imgfile) in enumerate(choices):
+            try:
+                img = pygame.image.load(os.path.join(assetsdir, 'images', imgfile)).convert_alpha()
+                img = pygame.transform.smoothscale(img, (120, 120))
+            except Exception:
+                img = pygame.Surface((120, 120))
+                img.fill((80, 80, 80))
+            x = win.get_width() // 2 + (i - selected) * 200 - 60
+            y = win.get_height() // 2
+            border_color = (255, 255, 0) if i == selected else (100, 100, 100)
+            pygame.draw.rect(win, border_color, (x-10, y-10, 140, 140), 4)
+            win.blit(img, (x, y))
+            label_surf = font.render(label, True, border_color)
+            win.blit(label_surf, (x + 60 - label_surf.get_width() // 2, y + 130))
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key in (pygame.K_RIGHT, pygame.K_d):
+                    selected = (selected + 1) % len(choices)
+                if event.key in (pygame.K_LEFT, pygame.K_a):
+                    selected = (selected - 1) % len(choices)
+                if event.key == pygame.K_ESCAPE:
+                    return None
+                if event.key in (pygame.K_RETURN, pygame.K_SPACE):
+                    running = False
+            if event.type == pygame.JOYBUTTONDOWN:
+                if event.button == 0:  # A button
+                    running = False
+                if event.button == 4:  # LB
+                    selected = (selected - 1) % len(choices)
+                if event.button == 5:  # RB
+                    selected = (selected + 1) % len(choices)
+        clock.tick(30)
+    if choices[selected][0] is None:
+        return
+    choices[selected][0]()
 
 def credits_screen() -> None:
     """Display scrolling credits with centered lines and gradient background."""
@@ -440,6 +496,7 @@ def draw_crosshair():
 run = True
 highlighted_block = None
 splash_screen()
+game_menu()
 while run:
     clock.tick(60)
     pygame.event.pump()  # Prevent controller disconnects
